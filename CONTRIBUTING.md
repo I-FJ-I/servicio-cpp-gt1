@@ -23,17 +23,19 @@ Gracias por contribuir al microservicio en C++ (`servicio-cpp-gt1`). Para que tu
    git config core.hooksPath .githooks
 ```
 
-4. **Entorno C++:** Asegúrate de contar con un compilador compatible con C++17 o superior (`g++`/`clang++`) y **CMake** (3.16+) para compilar y ejecutar los tests en local.
+4. **Entorno C++:** tienes dos opciones:
+   - **Dev Container (recomendado):** con Docker y VS Code (extensión *Dev Containers*), abre el repositorio y ejecuta *Dev Containers: Reopen in Container*. Trae GCC, CMake, Ninja y clang-format en las versiones del proyecto y activa los hooks automáticamente.
+   - **Instalación local (Linux o WSL2):** un compilador compatible con C++17 o superior (`g++`/`clang++`), **CMake 3.21+**, Ninja y **clang-format 21.1.8** (`pip install clang-format==21.1.8`). Usa exactamente esa versión de clang-format: otras formatean distinto y el CI rechazaría tu PR.
 
 ## 2. Flujo de trabajo (Fork + Pull Request)
 
 Como colaborador externo al equipo propietario de `servicio-cpp-gt1`, debes trabajar desde un **fork**:
 
 1. **Elige un Issue:** Revisa la pestaña **Issues** y comenta en el algoritmo que vas a implementar para evitar duplicar trabajo. Solo se aceptan contribuciones de código no triviales (editar documentación no es válido).
-2. **Haz Fork y clona tu copia:**
+2. **Haz Fork y clona tu copia:** pulsa *Fork* en GitHub, clona **tu fork** y añade el repositorio original como `upstream`:
 
 ```bash
-   git clone https://github.com/I-FJ-I/servicio-cpp-gt1.git
+   git clone https://github.com/<TU_USUARIO>/servicio-cpp-gt1.git
    cd servicio-cpp-gt1
    git remote add upstream https://github.com/I-FJ-I/servicio-cpp-gt1.git
 ```
@@ -74,7 +76,9 @@ Cualquier algoritmo nuevo debe integrarse en el endpoint `POST /api/v1/benchmark
 
 ## 4. Tests y calidad del código
 
-- **Tests unitarios:** Todo PR debe añadir tests unitarios en C++ (integrados en CTest) que verifiquen que el algoritmo produce resultados exactos (por ejemplo, comprobando con `std::is_sorted` que el vector queda ordenado).
+- **Dónde va cada cosa:** el algoritmo en `src/algorithms/` (sin dependencias de la API), las rutas HTTP en `src/api/` y los tests en `tests/`. Toma como referencia `src/algorithms/mergesort.*` y `tests/test_mergesort.cpp`.
+- **Tests unitarios:** Todo PR debe añadir tests unitarios con **GoogleTest** (registrados en `tests/CMakeLists.txt` con la etiqueta `unit`) que verifiquen que el algoritmo produce resultados exactos (por ejemplo, comprobando con `std::is_sorted` que el vector queda ordenado y que contiene los mismos elementos).
+- **Formato:** el código sigue el estilo de Google (`.clang-format`). El hook de pre-commit lo aplica solo; el CI rechaza el PR si algún fichero no está formateado. Usa `std::` explícito y no uses `using namespace` (lo prohíbe la guía de estilo de Google).
 - **Tests de integración:** El endpoint `POST /api/v1/benchmark` debe responder correctamente con el nuevo algoritmo sin romper los endpoints ni algoritmos existentes.
 - **Uso de IA:** Está permitido apoyarse en asistentes de IA, pero debes revisar, comprender y validar todo el código C++ y su gestión de memoria antes de abrir el PR.
 
