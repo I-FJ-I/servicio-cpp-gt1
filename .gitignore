@@ -1,0 +1,20 @@
+# Directorios de compilación de CMake
+build/
+build-*/
+cmake-build-*/
+out/
+
+# Artefactos de compilación
+*.o
+*.obj
+*.a
+*.so
+*.exe
+
+# Editores e IDEs
+.idea/
+.vs/
+.vscode/
+
+# Configuración y secretos locales
+.env
