@@ -1,0 +1,23 @@
+#!/bin/sh
+# Formatea con clang-format los ficheros C++ que van en el commit y los vuelve a añadir.
+# Se activa una vez por clon con:  git config core.hooksPath .githooks
+
+EXPECTED_VERSION="21.1.8"
+
+files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.cpp' '*.hpp' '*.h' '*.cc')
+[ -z "$files" ] && exit 0
+
+if ! command -v clang-format >/dev/null 2>&1; then
+  echo "pre-commit: clang-format no está instalado (se espera la versión $EXPECTED_VERSION)." >&2
+  echo "            Instálalo con: pip install clang-format==$EXPECTED_VERSION" >&2
+  exit 1
+fi
+
+if ! clang-format --version | grep -q "$EXPECTED_VERSION"; then
+  echo "pre-commit: AVISO, tu clang-format no es la versión $EXPECTED_VERSION;" >&2
+  echo "            el job 'lint' del CI podría no coincidir con tu formato." >&2
+fi
+
+echo "pre-commit: formateando con clang-format..."
+echo "$files" | xargs clang-format -i || exit 1
+echo "$files" | xargs git add

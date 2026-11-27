@@ -1,0 +1,5 @@
+# Estilo de formato del proyecto. Versión de referencia: clang-format 21.1.8
+# (la misma en el hook de pre-commit, el Dev Container y el CI).
+Language: Cpp
+BasedOnStyle: Google
+Standard: c++17

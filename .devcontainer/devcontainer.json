@@ -1,0 +1,25 @@
+{
+  "name": "servicio-cpp-gt1",
+  "build": { "dockerfile": "Dockerfile" },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": { "moby": false }
+  },
+  "forwardPorts": [8080],
+  "postCreateCommand": "git config core.hooksPath .githooks && cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools-extension-pack",
+        "ms-vscode.cmake-tools",
+        "ms-azuretools.vscode-containers",
+        "github.vscode-github-actions"
+      ],
+      "settings": {
+        "cmake.buildDirectory": "${workspaceFolder}/build",
+        "cmake.generator": "Ninja",
+        "editor.formatOnSave": true,
+        "C_Cpp.clang_format_path": "/usr/local/bin/clang-format"
+      }
+    }
+  }
+}
